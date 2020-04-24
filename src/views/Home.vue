@@ -25,6 +25,7 @@
           <video
             @click="chooseVideo(item.saveUrl, index)"
             class="video-style"
+            :data-index='index'
             :class="{'active-video': item.saveUrl === videoStatus}"
             :src="item.saveUrl"></video>
         </swiper-slide>
@@ -187,7 +188,18 @@ export default {
       swiperOptions: {
         loop: true,
         direction: 'vertical',
-        slidesPerView: 2
+        slidesPerView: 2,
+        // 所有的最后处理多复制的slide
+        on: {
+          // 开启loop模式，会前后复制新的slide。没有事件
+          // 监听swiper的点击事件
+          click: (e) => {
+            // 获取所有swiper-slide，添加点击事件
+            let src = e.target.getAttribute('src');
+            let index = e.target.getAttribute('data-index');
+            this.chooseVideo(src, index)
+          }
+        }
       },
       // src
       chooseSrc: '',
@@ -197,7 +209,7 @@ export default {
     }
   },
   methods: {
-    // 获取点击的src
+    // 获取点击的src，并播放
     chooseVideo(src, index) {
       this.chooseSrc = src
       this.videoStatus = src
